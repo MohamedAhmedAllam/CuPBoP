@@ -18,3 +18,5 @@ include_directories(./threadPool/include/cpu)
 include_directories(../external/moodycamel/)
 file(GLOB proj_SOURCES "src/cpu/*.cpp")
 add_library(${LIB_NAME} SHARED ${proj_SOURCES})
+target_link_libraries(${LIB_NAME} PRIVATE MPI::MPI_CXX)
+

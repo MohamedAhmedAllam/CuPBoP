@@ -115,15 +115,36 @@ cudaError_t cudaStreamCopyAttributes(cudaStream_t dst, cudaStream_t src) {
 From our evaluation, CPU backend can gain little benefit
 from multi stream. Thus, we only use single stream
 */
-cudaError_t cudaStreamCreate(cudaStream_t *pStream) { return cudaSuccess; }
 
+//with MPI for NCCL
+cudaError_t cudaStreamCreate(cudaStream_t *stream){
+    if (stream == nullptr){
+        return cudaErrorInvalidValue;
+    }
+
+    //TODO 1- check if this the best way to initialize
+    //     2- check if if I need to free somewhere        
+    (*stream) = new CUstream_st;
+    (*stream)->request = new MPI_Request;
+
+    //*stream = nullptr;  //Not sure of this but just in case
+    return cudaSuccess;
+
+}
+
+//Wrapper for Cuda Stream Synchronization
+cudaError_t cudaStreamSynchronize(cudaStream_t stream){
+    //currently no stream to synchronize on
+    MPI_Wait((*stream).request, NULL );
+    return cudaSuccess;
+}
+
+//TODO, implement thsi for NCCL
 cudaError_t cudaStreamDestroy(cudaStream_t stream) { return cudaSuccess; }
 
 // All kernel launch will following a sync, thus, this should
 // always be true
 cudaError_t cudaStreamQuery(cudaStream_t stream) { return cudaSuccess; }
-
-cudaError_t cudaStreamSynchronize(cudaStream_t stream) { return cudaSuccess; }
 
 cudaError_t cudaGetDeviceCount(int *count) {
   // dummy value

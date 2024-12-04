@@ -4,7 +4,7 @@ project(CuPBoP)
 set(CMAKE_PROJECT_DESCRIPTION "Executing CUDA on non-NVIDIA architecture.")
 set(CMAKE_CXX_STANDARD "14")
 
-find_program(LLVM_CONFIG llvm-config)
+find_program(LLVM_CONFIG llvm-config-14)
 if(NOT LLVM_CONFIG)
   message(FATAL_ERROR "llvm-config not found. Please install LLVM.")
 else()
@@ -37,6 +37,8 @@ option(DEBUG "Print debug information." OFF)
 if(DEBUG)
   add_definitions(-DDEBUG)
 endif()
+
+find_package(MPI REQUIRED)
 
 set(CMAKE_CXX_FLAGS
     "-I${CUDA_PATH}/include ${LLVM_CXX_FLAG} ${CMAKE_CXX_FLAGS} -Wunused")

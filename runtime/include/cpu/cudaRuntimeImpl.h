@@ -2,7 +2,16 @@
 #define __RUNTIME_IMPL__
 #include "structures.h"
 #include <stdint.h>
+
+#include "mpi.h"
+//#include <cuda_runtime.h>
+
 extern "C" {
+struct CUstream_st{
+    MPI_Request *request;
+    int d = 0;
+};
+
 cudaError_t cudaGetDevice(int *devPtr);
 const char *cudaGetErrorname(cudaError_t);
 cudaError_t cudaDeviceReset(void);
